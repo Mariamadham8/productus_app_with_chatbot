@@ -5,9 +5,9 @@ import '../../../../../../../core/theming/app_fonts.dart';
 class ProductCard extends StatelessWidget {
   final String title;
   final String subtitle;
-  final String price;
+  final double price;
   final double rating;
-  final int reviewsCount;
+  final num reviewsCount;
   final String imageUrl;
 
   const ProductCard({
@@ -91,7 +91,6 @@ class ProductCard extends StatelessWidget {
             ),
           ),
 
-          // Price
           Text(
             '\$$price',
             style: AppFonts.font16BlackW500.copyWith(

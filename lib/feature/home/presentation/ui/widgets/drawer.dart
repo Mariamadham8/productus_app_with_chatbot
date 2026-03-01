@@ -1,3 +1,5 @@
+import 'package:auth_api_app/feature/chat_bot/presentation/ui/views/chat_bot_view.dart';
+import 'package:auth_api_app/feature/home/presentation/ui/views/profile_info_view.dart';
 import 'package:flutter/material.dart';
 import '../../../../../../../core/theming/app_color.dart';
 import '../../../../../../../core/theming/app_fonts.dart';
@@ -64,13 +66,19 @@ class AppNavigationDrawer extends StatelessWidget {
             _DrawerItem(
               icon: Icons.person_outline,
               label: 'Profile',
-              onTap: () => Navigator.pop(context),
+              onTap: () => Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => ProfileScreen()),
+              ),
             ),
             _DrawerItem(
               icon: Icons.auto_awesome_outlined,
               label: 'Smart Assistant',
               isSelected: true,
-              onTap: () => Navigator.pop(context),
+              onTap: () => Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => ChatBotScreen()),
+              ),
             ),
             _DrawerItem(
               icon: Icons.shopping_bag_outlined,

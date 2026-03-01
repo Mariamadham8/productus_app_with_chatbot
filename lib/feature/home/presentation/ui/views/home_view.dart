@@ -1,6 +1,10 @@
+import 'package:auth_api_app/feature/auth/data/models/login_model.dart';
+import 'package:auth_api_app/feature/auth/presentation/manger/login_cubit.dart';
+import 'package:auth_api_app/feature/auth/presentation/ui/views/login_view.dart';
 import 'package:auth_api_app/feature/home/presentation/ui/widgets/drawer.dart';
 import 'package:auth_api_app/feature/home/presentation/ui/widgets/home_body.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../../../../../core/theming/app_fonts.dart';
 
 class HomeScreen extends StatelessWidget {
@@ -9,7 +13,6 @@ class HomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFFF5F6FA),
       appBar: AppBar(
         backgroundColor: Colors.white,
         elevation: 0,
@@ -23,14 +26,29 @@ class HomeScreen extends StatelessWidget {
         ],
         iconTheme: const IconThemeData(color: Colors.black87),
       ),
-      drawer: AppNavigationDrawer(
-        username: 'Alex Morgan',
-        email: 'alex.morgan@example.com',
-        onLogout: () {
-          // TODO: call AuthCubit logout
+      drawer: BlocBuilder<LoginCubit, LoginState>(
+        builder: (context, state) {
+          print("STATE IS: $state");
+          print("STATE TYPE: ${state.runtimeType}");
+          final username = state is LoginSuccess
+              ? state.user.firstName
+              : 'error';
+          final email = state is LoginSuccess ? state.user.email : 'error';
+
+          return AppNavigationDrawer(
+            username: username,
+            email: email,
+            onLogout: () {
+              context.read<LoginCubit>().logout();
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => LoginScreen()),
+              );
+            },
+          );
         },
       ),
-      body: const HomeScreenBody(products: [], isLoading: false),
+      body: const HomeScreenBody(),
     );
   }
 }

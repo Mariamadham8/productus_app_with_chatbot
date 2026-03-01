@@ -1,7 +1,11 @@
 import 'package:auth_api_app/core/helpers/validators.dart';
+import 'package:auth_api_app/core/routing/app_router.dart';
+import 'package:auth_api_app/core/widgets/app_snack_bar.dart';
 import 'package:auth_api_app/core/widgets/custom_button.dart';
 import 'package:auth_api_app/core/widgets/custom_textfeild.dart';
+import 'package:auth_api_app/feature/auth/presentation/manger/login_cubit.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../../../core/theming/app_color.dart';
 import '../../../../../core/theming/app_fonts.dart';
 
@@ -25,7 +29,12 @@ class _LoginScreenState extends State<LoginScreen> {
   }
 
   void _onLoginPressed() {
-    if (_formKey.currentState!.validate()) {}
+    if (_formKey.currentState!.validate()) {
+      context.read<LoginCubit>().login(
+        _usernameController.text.trim(),
+        _passwordController.text.trim(),
+      );
+    }
   }
 
   @override
@@ -111,7 +120,27 @@ class _LoginScreenState extends State<LoginScreen> {
 
                 const SizedBox(height: 24),
 
-                CustomButton(text: 'Log In', onPressed: _onLoginPressed),
+                BlocConsumer<LoginCubit, LoginState>(
+                  listener: (context, state) {
+                    if (state is LoginFailure) {
+                      AppSnackBar.showError(context, state.message);
+                    }
+                    if (state is LoginSuccess) {
+                      Navigator.pushReplacementNamed(
+                        context,
+                        AppRouter.homeRoute,
+                      );
+                    }
+                  },
+
+                  builder: (context, state) {
+                    return CustomButton(
+                      text: 'Log In',
+                      isLoading: state is LoginLoading,
+                      onPressed: _onLoginPressed,
+                    );
+                  },
+                ),
 
                 const SizedBox(height: 40),
               ],
